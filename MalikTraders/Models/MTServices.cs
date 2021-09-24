@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 
 namespace MalikTraders.Models
 {
-    public class AccDetails
+    public class MTServices
     {
         public int id { get; set; }
-        public int payedAmount { get; set; }
-        public DateTime PayingDate { get; set; }
+        public string Name { get; set; }
+        public int Amount { get; set; }
+        public string Details { get; set; }
+
     }
 }
