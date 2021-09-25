@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MalikTraders.Models
 {
@@ -12,10 +13,5 @@ namespace MalikTraders.Models
         public string Gender { get; set; }
         public DateTime Registration_Date { get; set; }
         public DateTime LastLogin { get; set; }
-        public DateTime ClosingDate { get; set; }
-        public bool isCLosed { get; set; }
-        public int ServiceId { get; set; }
-        public int AccId { get; set; }
-
     }
 }

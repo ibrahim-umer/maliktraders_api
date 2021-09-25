@@ -10,5 +10,7 @@ namespace MalikTraders.Models
         public int id { get; set; }
         public int payedAmount { get; set; }
         public DateTime PayingDate { get; set; }
+
+        public int AccId { get; set; }
     }
 }
