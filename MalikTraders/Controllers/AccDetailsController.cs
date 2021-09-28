@@ -26,7 +26,11 @@ namespace MalikTraders.Controllers
         {
             return await _context.AccDetails.ToListAsync();
         }
-
+        [HttpGet("[action]/{id}")]
+        public async Task<ActionResult<IEnumerable<AccDetails>>> GetAccDetailsbyAccountId(int id)
+        {
+            return await _context.AccDetails.Where(x=>x.AccId==id).ToListAsync();
+        }
         // GET: api/AccDetails/5
         [HttpGet("{id}")]
         public async Task<ActionResult<AccDetails>> GetAccDetails(int id)
@@ -77,6 +81,7 @@ namespace MalikTraders.Controllers
         [HttpPost]
         public async Task<ActionResult<AccDetails>> PostAccDetails(AccDetails accDetails)
         {
+            accDetails.PayingDate = DateTime.Now;
             _context.AccDetails.Add(accDetails);
             await _context.SaveChangesAsync();
 

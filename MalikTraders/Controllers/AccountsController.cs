@@ -26,7 +26,24 @@ namespace MalikTraders.Controllers
         {
             return await _context.Accounts.ToListAsync();
         }
-
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> GetAccountbyUserId(int id)
+        {
+            try
+            {
+                List<Account> accounts = await _context.Accounts.Where(x => x.Userid == id).ToListAsync();
+                for(int i=0; i < accounts.Count; i++)
+                {
+                    accounts[i].AccPaymentDetails = await _context.AccDetails.
+                                                        Where(x => x.AccId == accounts[i].id).ToListAsync();
+                }
+                return Ok(accounts);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         // GET: api/Accounts/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Account>> GetAccount(int id)

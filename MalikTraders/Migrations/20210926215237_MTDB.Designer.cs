@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MalikTraders.Migrations
 {
     [DbContext(typeof(MTDbContext))]
-    [Migration("20210925112632_MTDB")]
+    [Migration("20210926215237_MTDB")]
     partial class MTDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,7 +66,7 @@ namespace MalikTraders.Migrations
                     b.Property<string>("ClosingDescription")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MTServicesid")
+                    b.Property<int>("MTServiceId")
                         .HasColumnType("int");
 
                     b.Property<int>("MonthlyInstalment")
@@ -79,8 +79,6 @@ namespace MalikTraders.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("id");
-
-                    b.HasIndex("MTServicesid");
 
                     b.HasIndex("Userid");
 
@@ -111,7 +109,9 @@ namespace MalikTraders.Migrations
             modelBuilder.Entity("MalikTraders.Models.User", b =>
                 {
                     b.Property<int>("id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("GUID")
                         .HasColumnType("nvarchar(max)");
@@ -128,7 +128,12 @@ namespace MalikTraders.Migrations
                     b.Property<string>("email")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("userDetailsid")
+                        .HasColumnType("int");
+
                     b.HasKey("id");
+
+                    b.HasIndex("userDetailsid");
 
                     b.ToTable("Users");
                 });
@@ -177,12 +182,8 @@ namespace MalikTraders.Migrations
 
             modelBuilder.Entity("MalikTraders.Models.Account", b =>
                 {
-                    b.HasOne("MalikTraders.Models.MTServices", null)
-                        .WithMany("Accounts")
-                        .HasForeignKey("MTServicesid");
-
                     b.HasOne("MalikTraders.Models.User", null)
-                        .WithMany("account")
+                        .WithMany("accounts")
                         .HasForeignKey("Userid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -190,13 +191,11 @@ namespace MalikTraders.Migrations
 
             modelBuilder.Entity("MalikTraders.Models.User", b =>
                 {
-                    b.HasOne("MalikTraders.Models.UserDetails", "userDetailsId")
+                    b.HasOne("MalikTraders.Models.UserDetails", "userDetails")
                         .WithMany()
-                        .HasForeignKey("id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("userDetailsid");
 
-                    b.Navigation("userDetailsId");
+                    b.Navigation("userDetails");
                 });
 
             modelBuilder.Entity("MalikTraders.Models.Account", b =>
@@ -204,14 +203,9 @@ namespace MalikTraders.Migrations
                     b.Navigation("AccPaymentDetails");
                 });
 
-            modelBuilder.Entity("MalikTraders.Models.MTServices", b =>
-                {
-                    b.Navigation("Accounts");
-                });
-
             modelBuilder.Entity("MalikTraders.Models.User", b =>
                 {
-                    b.Navigation("account");
+                    b.Navigation("accounts");
                 });
 #pragma warning restore 612, 618
         }

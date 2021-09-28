@@ -45,22 +45,24 @@ namespace MalikTraders.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false),
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     GUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Role = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    userDetailsid = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Users_userDetails_id",
-                        column: x => x.id,
+                        name: "FK_Users_userDetails_userDetailsid",
+                        column: x => x.userDetailsid,
                         principalTable: "userDetails",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -77,17 +79,11 @@ namespace MalikTraders.Migrations
                     isAccClosed = table.Column<bool>(type: "bit", nullable: false),
                     ClosingDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Userid = table.Column<int>(type: "int", nullable: false),
-                    MTServicesid = table.Column<int>(type: "int", nullable: true)
+                    MTServiceId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Accounts", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_Accounts_MTServices_MTServicesid",
-                        column: x => x.MTServicesid,
-                        principalTable: "MTServices",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Accounts_Users_Userid",
                         column: x => x.Userid,
@@ -123,14 +119,14 @@ namespace MalikTraders.Migrations
                 column: "AccId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Accounts_MTServicesid",
-                table: "Accounts",
-                column: "MTServicesid");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Accounts_Userid",
                 table: "Accounts",
                 column: "Userid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_userDetailsid",
+                table: "Users",
+                column: "userDetailsid");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -139,10 +135,10 @@ namespace MalikTraders.Migrations
                 name: "AccDetails");
 
             migrationBuilder.DropTable(
-                name: "Accounts");
+                name: "MTServices");
 
             migrationBuilder.DropTable(
-                name: "MTServices");
+                name: "Accounts");
 
             migrationBuilder.DropTable(
                 name: "Users");

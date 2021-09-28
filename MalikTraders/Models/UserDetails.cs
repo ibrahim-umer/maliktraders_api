@@ -5,6 +5,7 @@ namespace MalikTraders.Models
 {
     public class UserDetails
     {
+        [ForeignKey("User")]
         public int id { get; set; }
         public string Name { get; set; }
         public string CNIC { get; set; }

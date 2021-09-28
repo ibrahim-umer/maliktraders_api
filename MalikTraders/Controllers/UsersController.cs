@@ -24,7 +24,31 @@ namespace MalikTraders.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            try
+            {
+                var users = from user in await _context.Users.ToListAsync()
+                            join userD in await _context.userDetails.ToListAsync()
+                            on user.userDetails.id equals userD.id
+                            select new 
+                            { 
+                                user.id, 
+                                userD.Name,
+                                user.UserName,
+                                user.Role,
+                                userD.PhoneNumber,
+                                userD.Registration_Date,
+                                userD.Gender,
+                                userD.LastLogin,
+                                userD.Address,
+                                userD.CNIC,
+                                user.email
+                            };
+                return Ok(users);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // GET: api/Users/5
@@ -55,6 +79,7 @@ namespace MalikTraders.Controllers
 
             try
             {
+                
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -77,22 +102,9 @@ namespace MalikTraders.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
+            user.userDetails.Registration_Date = DateTime.Now;
             _context.Users.Add(user);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (UserExists(user.id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetUser", new { id = user.id }, user);
         }
