@@ -20,7 +20,7 @@ namespace MalikTraders.Controllers
             _context = context;
         }
 
-        // GET: api/Users
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
@@ -43,6 +43,7 @@ namespace MalikTraders.Controllers
                                 userD.CNIC,
                                 user.email
                             };
+                
                 return Ok(users);
             }
             catch(Exception ex)
@@ -51,7 +52,70 @@ namespace MalikTraders.Controllers
             }
         }
 
-        // GET: api/Users/5
+
+        [HttpGet("[action]/{CNIC}")]
+        public async Task<ActionResult<IEnumerable<User>>> SearchUserbyCNIC(string CNIC)
+        {
+            try
+            {
+                var users = from user in await _context.Users.ToListAsync()
+                            join userD in await _context.userDetails.ToListAsync()
+                            on user.userDetails.id equals userD.id
+                            where userD.CNIC.Contains(CNIC)
+                            select new
+                            {
+                                user.id,
+                                userD.Name,
+                                user.UserName,
+                                user.Role,
+                                userD.PhoneNumber,
+                                userD.Registration_Date,
+                                userD.Gender,
+                                userD.LastLogin,
+                                userD.Address,
+                                userD.CNIC,
+                                user.email
+                            };
+                
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("[action]/{Name}")]
+        public async Task<ActionResult<IEnumerable<User>>> SearchUserbyName(string Name)
+        {
+            try
+            {
+                var users = from user in await _context.Users.ToListAsync()
+                            join userD in await _context.userDetails.ToListAsync()
+                            on user.userDetails.id equals userD.id
+                            where userD.Name.ToLower().Contains(Name.ToLower()) 
+                            select new
+                            {
+                                user.id,
+                                userD.Name,
+                                user.UserName,
+                                user.Role,
+                                userD.PhoneNumber,
+                                userD.Registration_Date,
+                                userD.Gender,
+                                userD.LastLogin,
+                                userD.Address,
+                                userD.CNIC,
+                                user.email
+                            };
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
@@ -65,8 +129,6 @@ namespace MalikTraders.Controllers
             return user;
         }
 
-        // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, User user)
         {
@@ -97,8 +159,6 @@ namespace MalikTraders.Controllers
             return NoContent();
         }
 
-        // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
@@ -109,7 +169,6 @@ namespace MalikTraders.Controllers
             return CreatedAtAction("GetUser", new { id = user.id }, user);
         }
 
-        // DELETE: api/Users/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
