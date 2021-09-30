@@ -18,7 +18,6 @@ namespace MalikTraders.Models
         public string ClosingDescription { get; set; }
         public int Userid { get; set; }
         public int MTServiceId { get; set; }
-
         [ForeignKey("AccId")]
         public ICollection<AccDetails> AccPaymentDetails { get; set; }
         

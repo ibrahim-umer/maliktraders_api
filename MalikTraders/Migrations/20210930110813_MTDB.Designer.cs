@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MalikTraders.Migrations
 {
     [DbContext(typeof(MTDbContext))]
-    [Migration("20210926215237_MTDB")]
+    [Migration("20210930110813_MTDB")]
     partial class MTDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,9 @@ namespace MalikTraders.Migrations
 
                     b.Property<DateTime>("PayingDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<int>("payedAmount")
                         .HasColumnType("int");

@@ -32,6 +32,9 @@ namespace MalikTraders.Migrations
                     b.Property<DateTime>("PayingDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.Property<int>("payedAmount")
                         .HasColumnType("int");
 

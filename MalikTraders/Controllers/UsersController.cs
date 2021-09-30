@@ -20,6 +20,29 @@ namespace MalikTraders.Controllers
             _context = context;
         }
 
+        [HttpPost("[action]/{Uid}")]
+        public async Task<IActionResult> GetUserDatailsId(int Uid)
+        {
+            try
+            {
+                
+                var ud = from user in await _context.Users.ToListAsync()
+                         join userD in await _context.userDetails.ToListAsync()
+                         on user.userDetails.id equals userD.id
+                         where user.id == Uid
+                         select userD;
+                int udID = 0;
+                foreach(UserDetails userDetails in ud)
+                {
+                    udID = userDetails.id;
+                }
+                return Ok(udID);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
@@ -167,6 +190,20 @@ namespace MalikTraders.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetUser", new { id = user.id }, user);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<ActionResult<User>> LoginUser(string  UserName, string Password)
+        {
+            try
+            {
+                User _user = await _context.Users.FirstAsync(x => x.Password == Password && x.UserName == UserName);
+                return Ok(_user);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]

@@ -100,7 +100,8 @@ namespace MalikTraders.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     payedAmount = table.Column<int>(type: "int", nullable: false),
                     PayingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AccId = table.Column<int>(type: "int", nullable: false)
+                    AccId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

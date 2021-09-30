@@ -15,6 +15,8 @@ namespace MalikTraders.Models
         public string Password { get; set; }
         public string Role { get; set; }
         public UserDetails userDetails { get; set; }
+        [ForeignKey("Userid")]
         public ICollection<Account> accounts { get; set; }
+
     }
 }
