@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MalikTraders.Models;
+using AuthenticationPlugin;
 
 namespace MalikTraders.Controllers
 {
@@ -185,19 +186,29 @@ namespace MalikTraders.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-            user.userDetails.Registration_Date = DateTime.Now;
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetUser", new { id = user.id }, user);
+            try
+            {
+                user.userDetails.Registration_Date = DateTime.Now;
+                user.Password = SecurePasswordHasherHelper.Hash(user.Password);
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction("GetUser", new { id = user.id }, user);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.InnerException.Message);
+            }
         }
+
 
         [HttpPost("[action]")]
         public async Task<ActionResult<User>> LoginUser(string  UserName, string Password)
         {
             try
             {
-                User _user = await _context.Users.FirstAsync(x => x.Password == Password && x.UserName == UserName);
+                User _user = await _context.Users.FirstAsync(x => x.UserName == UserName);
+                if (!SecurePasswordHasherHelper.Verify(Password, _user.Password)) 
+                    throw new Exception("Password Wrong please try again");  
                 return Ok(_user);
             }
             catch(Exception ex)

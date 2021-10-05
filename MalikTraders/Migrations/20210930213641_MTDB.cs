@@ -12,7 +12,7 @@ namespace MalikTraders.Migrations
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("SqlServer:Identity", "1001, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Amount = table.Column<int>(type: "int", nullable: false),
                     Details = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -27,10 +27,10 @@ namespace MalikTraders.Migrations
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("SqlServer:Identity", "2001, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CNIC = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CNIC = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Registration_Date = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -46,12 +46,12 @@ namespace MalikTraders.Migrations
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("SqlServer:Identity", "3001, 1"),
                     GUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    email = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)",defaultValue: "user", nullable: false),
                     userDetailsid = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -70,13 +70,13 @@ namespace MalikTraders.Migrations
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("SqlServer:Identity", "4001, 1"),
                     AccNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BankName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AmountPayable = table.Column<int>(type: "int", nullable: false),
                     MonthlyInstalment = table.Column<int>(type: "int", nullable: false),
-                    ClosingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    isAccClosed = table.Column<bool>(type: "bit", nullable: false),
+                    ClosingDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    isAccClosed = table.Column<bool>(type: "bit",defaultValue: false, nullable: false),
                     ClosingDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Userid = table.Column<int>(type: "int", nullable: false),
                     MTServiceId = table.Column<int>(type: "int", nullable: false)
@@ -97,11 +97,11 @@ namespace MalikTraders.Migrations
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("SqlServer:Identity", "5001, 1"),
                     payedAmount = table.Column<int>(type: "int", nullable: false),
-                    PayingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PayingDate = table.Column<DateTime>(type: "datetime2",defaultValue: DateTime.Now, nullable: false),
                     AccId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    PostedByUserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -125,9 +125,35 @@ namespace MalikTraders.Migrations
                 column: "Userid");
 
             migrationBuilder.CreateIndex(
+                name: "IX_userDetails_CNIC",
+                table: "userDetails",
+                column: "CNIC",
+                unique: true,
+                filter: "[CNIC] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_userDetails_PhoneNumber",
+                table: "userDetails",
+                column: "PhoneNumber",
+                unique: true,
+                filter: "[PhoneNumber] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_email",
+                table: "Users",
+                column: "email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_userDetailsid",
                 table: "Users",
                 column: "userDetailsid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_UserName",
+                table: "Users",
+                column: "UserName",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MalikTraders.Migrations
 {
     [DbContext(typeof(MTDbContext))]
-    [Migration("20210930110813_MTDB")]
+    [Migration("20210930213641_MTDB")]
     partial class MTDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,7 +34,7 @@ namespace MalikTraders.Migrations
                     b.Property<DateTime>("PayingDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("PostedByUserId")
                         .HasColumnType("int");
 
                     b.Property<int>("payedAmount")
@@ -120,21 +120,31 @@ namespace MalikTraders.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("email")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("userDetailsid")
                         .HasColumnType("int");
 
                     b.HasKey("id");
+
+                    b.HasIndex("UserName")
+                        .IsUnique();
+
+                    b.HasIndex("email")
+                        .IsUnique();
 
                     b.HasIndex("userDetailsid");
 
@@ -152,7 +162,7 @@ namespace MalikTraders.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CNIC")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
@@ -164,12 +174,20 @@ namespace MalikTraders.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Registration_Date")
                         .HasColumnType("datetime2");
 
                     b.HasKey("id");
+
+                    b.HasIndex("CNIC")
+                        .IsUnique()
+                        .HasFilter("[CNIC] IS NOT NULL");
+
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique()
+                        .HasFilter("[PhoneNumber] IS NOT NULL");
 
                     b.ToTable("userDetails");
                 });
