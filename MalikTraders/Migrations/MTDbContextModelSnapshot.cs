@@ -133,6 +133,9 @@ namespace MalikTraders.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<bool>("isUserDisabled")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("userDetailsid")
                         .HasColumnType("int");
 

@@ -51,7 +51,8 @@ namespace MalikTraders.Migrations
                     email = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(max)",defaultValue: "user", nullable: false),
+                    isUserDisabled = table.Column<bool>(type: "bit", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     userDetailsid = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -75,8 +76,8 @@ namespace MalikTraders.Migrations
                     BankName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AmountPayable = table.Column<int>(type: "int", nullable: false),
                     MonthlyInstalment = table.Column<int>(type: "int", nullable: false),
-                    ClosingDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    isAccClosed = table.Column<bool>(type: "bit",defaultValue: false, nullable: false),
+                    ClosingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    isAccClosed = table.Column<bool>(type: "bit", nullable: false),
                     ClosingDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Userid = table.Column<int>(type: "int", nullable: false),
                     MTServiceId = table.Column<int>(type: "int", nullable: false)
@@ -99,7 +100,7 @@ namespace MalikTraders.Migrations
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "5001, 1"),
                     payedAmount = table.Column<int>(type: "int", nullable: false),
-                    PayingDate = table.Column<DateTime>(type: "datetime2",defaultValue: DateTime.Now, nullable: false),
+                    PayingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AccId = table.Column<int>(type: "int", nullable: false),
                     PostedByUserId = table.Column<int>(type: "int", nullable: false)
                 },

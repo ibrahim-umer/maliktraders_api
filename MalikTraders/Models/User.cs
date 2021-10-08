@@ -19,6 +19,7 @@ namespace MalikTraders.Models
         public string UserName { get; set; }
         [Required]
         public string Password { get; set; }
+        public bool isUserDisabled { get; set; }
         [Required]
         public string Role { get; set; }
         public UserDetails userDetails { get; set; }
