@@ -88,7 +88,34 @@ namespace MalikTraders.Controllers
 
             return NoContent();
         }
+        [HttpPut("[action]/{id}")]
+        public async Task<IActionResult> DisableAndEnableHandler(int id,string ClosingDescription)
+        {
 
+            Account account = _context.Accounts.Find(id);
+            account.isAccClosed = !account.isAccClosed;
+            account.ClosingDescription = ClosingDescription;
+            account.ClosingDate = DateTime.Now;
+            _context.Entry(account).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AccountExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
         // POST: api/Accounts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]

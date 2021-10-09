@@ -20,7 +20,30 @@ namespace MalikTraders.Controllers
         {
             _context = context;
         }
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> UserAccountEnableandDisableHandler(int id)
+        {
+            User user = _context.Users.Find(id);
+            user.isUserDisabled = !user.isUserDisabled;
+            _context.Entry(user).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
+            return NoContent();
+        }
         [HttpPost("[action]/{Uid}")]
         public async Task<IActionResult> GetUserDatailsId(int Uid)
         {
@@ -65,7 +88,8 @@ namespace MalikTraders.Controllers
                                 userD.LastLogin,
                                 userD.Address,
                                 userD.CNIC,
-                                user.email
+                                user.email,
+                                user.isUserDisabled
                             };
                 
                 return Ok(users);
