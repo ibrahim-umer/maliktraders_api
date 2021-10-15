@@ -23,11 +23,12 @@ namespace MalikTraders.Controllers
         {
             try
             {
-                var myList = from AD in _context.AccDetails
-                             join Acc in _context.Accounts on AD.AccId equals Acc.id
-                             join MTS in _context.MTServices on Acc.MTServiceId equals MTS.id
-                             join u in _context.Users on Acc.Userid equals u.id
-                             join ud in _context.userDetails on u.userDetails.id equals ud.id
+               
+                var myList = from AD in _context.AccDetails.ToList()
+                             join Acc in _context.Accounts.ToList() on AD.AccId equals Acc.id
+                             join MTS in _context.MTServices.ToList() on Acc.MTServiceId equals MTS.id
+                             join u in _context.Users.ToList() on Acc.Userid equals u.id
+                             join ud in _context.userDetails.ToList() on u.UserDetail.id equals ud.id
                              where(AD.PayingDate.Date == DateTime.Now.Date)
                              select new
                              {
@@ -75,7 +76,7 @@ namespace MalikTraders.Controllers
 
                 var detailsAboutUnPayed = from Acc in UnPayedList
                                           join U in _context.Users on Acc.Userid equals U.id
-                                          join UD in _context.userDetails on U.userDetails.id equals UD.id
+                                          join UD in _context.userDetails on U.UserDetail.id equals UD.id
                                           join MTS in _context.MTServices on Acc.MTServiceId equals MTS.id
                                           select new
                                           {
@@ -121,7 +122,7 @@ namespace MalikTraders.Controllers
 
                 var detailsAboutUnPayed = from Acc in UnPayedList
                                           join U in _context.Users on Acc.Userid equals U.id
-                                          join UD in _context.userDetails on U.userDetails.id equals UD.id
+                                          join UD in _context.userDetails on U.UserDetail.id equals UD.id
                                           join MTS in _context.MTServices on Acc.MTServiceId equals MTS.id
                                           select new
                                           {

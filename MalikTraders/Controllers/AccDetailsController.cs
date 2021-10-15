@@ -20,23 +20,24 @@ namespace MalikTraders.Controllers
             _context = context;
         }
 
-        // GET: api/AccDetails
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AccDetails>>> GetAccDetails()
         {
             return await _context.AccDetails.ToListAsync();
         }
+
         [HttpGet("[action]")]
         public async Task<ActionResult<IEnumerable<AccDetails>>> GetTodayEntries()
         {
             return await _context.AccDetails.Where(x=>x.PayingDate.Date==DateTime.Now.Date).ToListAsync();
         }
+
         [HttpGet("[action]/{id}")]
         public async Task<ActionResult<IEnumerable<AccDetails>>> GetAccDetailsbyAccountId(int id)
         {
             return await _context.AccDetails.Where(x=>x.AccId==id).ToListAsync();
         }
-        // GET: api/AccDetails/5
+
         [HttpGet("{id}")]
         public async Task<ActionResult<AccDetails>> GetAccDetails(int id)
         {
@@ -50,8 +51,6 @@ namespace MalikTraders.Controllers
             return accDetails;
         }
 
-        // PUT: api/AccDetails/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAccDetails(int id, AccDetails accDetails)
         {
@@ -81,8 +80,6 @@ namespace MalikTraders.Controllers
             return NoContent();
         }
 
-        // POST: api/AccDetails
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<AccDetails>> PostAccDetails(AccDetails accDetails)
         {
@@ -93,7 +90,6 @@ namespace MalikTraders.Controllers
             return CreatedAtAction("GetAccDetails", new { id = accDetails.id }, accDetails);
         }
 
-        // DELETE: api/AccDetails/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAccDetails(int id)
         {

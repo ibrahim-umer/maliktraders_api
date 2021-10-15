@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MalikTraders.Migrations
 {
     [DbContext(typeof(MTDbContext))]
-    [Migration("20211008110232_MTDB")]
+    [Migration("20211015001538_MTDB")]
     partial class MTDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -88,6 +88,27 @@ namespace MalikTraders.Migrations
                     b.ToTable("Accounts");
                 });
 
+            modelBuilder.Entity("MalikTraders.Models.ContactLeads", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Number")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("ContactLeads");
+                });
+
             modelBuilder.Entity("MalikTraders.Models.MTServices", b =>
                 {
                     b.Property<int>("id")
@@ -109,6 +130,124 @@ namespace MalikTraders.Migrations
                     b.ToTable("MTServices");
                 });
 
+            modelBuilder.Entity("MalikTraders.Models.Notification", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Body")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ExpiringDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Header")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IsRead")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("PublishingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Userid")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("Userid");
+
+                    b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("MalikTraders.Models.ShopAccount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AccountNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BankName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CurrentPayment")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("IsDefaulter")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("ShopAccount");
+                });
+
+            modelBuilder.Entity("MalikTraders.Models.ShopAccountPaymentHistory", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AmountPaid")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AmountRecived")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PaymentDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ShopAccountId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TransectionDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("ShopAccountId");
+
+                    b.ToTable("ShopAccountPaymentHistory");
+                });
+
+            modelBuilder.Entity("MalikTraders.Models.SystemNotification", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Body")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ExpiringDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Header")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("PublishingDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("id");
+
+                    b.ToTable("SystemNotifications");
+                });
+
             modelBuilder.Entity("MalikTraders.Models.User", b =>
                 {
                     b.Property<int>("id")
@@ -127,6 +266,9 @@ namespace MalikTraders.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserDetailid")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -138,18 +280,15 @@ namespace MalikTraders.Migrations
                     b.Property<bool>("isUserDisabled")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("userDetailsid")
-                        .HasColumnType("int");
-
                     b.HasKey("id");
+
+                    b.HasIndex("UserDetailid");
 
                     b.HasIndex("UserName")
                         .IsUnique();
 
                     b.HasIndex("email")
                         .IsUnique();
-
-                    b.HasIndex("userDetailsid");
 
                     b.ToTable("Users");
                 });
@@ -207,19 +346,48 @@ namespace MalikTraders.Migrations
             modelBuilder.Entity("MalikTraders.Models.Account", b =>
                 {
                     b.HasOne("MalikTraders.Models.User", null)
-                        .WithMany("accounts")
+                        .WithMany("SchemeAccounts")
                         .HasForeignKey("Userid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MalikTraders.Models.Notification", b =>
+                {
+                    b.HasOne("MalikTraders.Models.User", null)
+                        .WithMany("UserNotification")
+                        .HasForeignKey("Userid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MalikTraders.Models.ShopAccount", b =>
+                {
+                    b.HasOne("MalikTraders.Models.User", "ShopAccUser")
+                        .WithOne("UserShopAccount")
+                        .HasForeignKey("MalikTraders.Models.ShopAccount", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ShopAccUser");
+                });
+
+            modelBuilder.Entity("MalikTraders.Models.ShopAccountPaymentHistory", b =>
+                {
+                    b.HasOne("MalikTraders.Models.ShopAccount", null)
+                        .WithMany("ShopAccountPayments")
+                        .HasForeignKey("ShopAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("MalikTraders.Models.User", b =>
                 {
-                    b.HasOne("MalikTraders.Models.UserDetails", "userDetails")
+                    b.HasOne("MalikTraders.Models.UserDetails", "UserDetail")
                         .WithMany()
-                        .HasForeignKey("userDetailsid");
+                        .HasForeignKey("UserDetailid");
 
-                    b.Navigation("userDetails");
+                    b.Navigation("UserDetail");
                 });
 
             modelBuilder.Entity("MalikTraders.Models.Account", b =>
@@ -227,9 +395,18 @@ namespace MalikTraders.Migrations
                     b.Navigation("AccPaymentDetails");
                 });
 
+            modelBuilder.Entity("MalikTraders.Models.ShopAccount", b =>
+                {
+                    b.Navigation("ShopAccountPayments");
+                });
+
             modelBuilder.Entity("MalikTraders.Models.User", b =>
                 {
-                    b.Navigation("accounts");
+                    b.Navigation("SchemeAccounts");
+
+                    b.Navigation("UserNotification");
+
+                    b.Navigation("UserShopAccount");
                 });
 #pragma warning restore 612, 618
         }

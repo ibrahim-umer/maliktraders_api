@@ -52,7 +52,7 @@ namespace MalikTraders.Controllers
                 
                 var ud = from user in await _context.Users.ToListAsync()
                          join userD in await _context.userDetails.ToListAsync()
-                         on user.userDetails.id equals userD.id
+                         on user.UserDetail.id equals userD.id
                          where user.id == Uid
                          select userD;
                 int udID = 0;
@@ -75,7 +75,7 @@ namespace MalikTraders.Controllers
             {
                 var users = from user in await _context.Users.ToListAsync()
                             join userD in await _context.userDetails.ToListAsync()
-                            on user.userDetails.id equals userD.id
+                            on user.UserDetail.id equals userD.id
                             select new 
                             { 
                                 user.id, 
@@ -108,7 +108,7 @@ namespace MalikTraders.Controllers
             {
                 var users = from user in await _context.Users.ToListAsync()
                             join userD in await _context.userDetails.ToListAsync()
-                            on user.userDetails.id equals userD.id
+                            on user.UserDetail.id equals userD.id
                             where userD.CNIC.Contains(CNIC)
                             select new
                             {
@@ -140,7 +140,7 @@ namespace MalikTraders.Controllers
             {
                 var users = from user in await _context.Users.ToListAsync()
                             join userD in await _context.userDetails.ToListAsync()
-                            on user.userDetails.id equals userD.id
+                            on user.UserDetail.id equals userD.id
                             where userD.Name.ToLower().Contains(Name.ToLower()) 
                             select new
                             {
@@ -212,7 +212,7 @@ namespace MalikTraders.Controllers
         {
             try
             {
-                user.userDetails.Registration_Date = DateTime.Now;
+                user.UserDetail.Registration_Date = DateTime.Now;
                 user.Password = SecurePasswordHasherHelper.Hash(user.Password);
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();

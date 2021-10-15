@@ -37,8 +37,8 @@ namespace MalikTraders
             services.AddControllers();
 
             services.AddDbContext<MTDbContext>(options =>
-                options.UseSqlServer(@"Data Source=DESKTOP-FSON37C\SQLEXPRESS;Initial Catalog=MTDB;Integrated Security=True"));
-            
+            //options.UseSqlServer(@"Server=tcp:maliktraders.database.windows.net,1433;Initial Catalog=mt;Persist Security Info=False;User ID=MalikTraders;Password=m.Traders;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"));
+            options.UseSqlServer(@"Data Source=DESKTOP-FSON37C\SQLEXPRESS;Initial Catalog=MTDB;Integrated Security=True"));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MalikTraders", Version = "v1" });
