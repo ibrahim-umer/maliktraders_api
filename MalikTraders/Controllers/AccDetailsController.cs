@@ -89,6 +89,22 @@ namespace MalikTraders.Controllers
 
             return CreatedAtAction("GetAccDetails", new { id = accDetails.id }, accDetails);
         }
+        [HttpPost("[action]/{id}")]
+        public async Task<ActionResult<AccDetails>> GetAccountDetailsByGivenMonth(int id,DateTime StartDate,DateTime EndDate)
+        {
+            try
+            {
+                var AccD = from AD in await _context.AccDetails.ToListAsync()
+                           where AD.PayingDate >= StartDate && AD.PayingDate <= EndDate
+                           select AD;
+                return Ok(AccD);
+                           
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAccDetails(int id)
