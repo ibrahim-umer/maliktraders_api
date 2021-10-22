@@ -1,8 +1,7 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MalikTraders.Models;
@@ -20,18 +19,22 @@ namespace MalikTraders.Controllers
             _context = context;
         }
 
-        // GET: api/ShopAccounts
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ShopAccount>>> GetShopAccounts()
         {
-            return await _context.ShopAccounts.ToListAsync();
+            return await _context.ShopAccount.ToListAsync();
         }
 
-        // GET: api/ShopAccounts/5
+        [HttpGet("[action]/{id}")]
+        public IActionResult ShopAccountExistsByUserId(int id)
+        {
+            return Ok(_context.ShopAccount.Any(e => e.UserId == id));
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<ShopAccount>> GetShopAccount(int id)
         {
-            var shopAccount = await _context.ShopAccounts.FindAsync(id);
+            var shopAccount = await _context.ShopAccount.FindAsync(id);
 
             if (shopAccount == null)
             {
@@ -41,8 +44,19 @@ namespace MalikTraders.Controllers
             return shopAccount;
         }
 
-        // PUT: api/ShopAccounts/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpGet("[action]/{id}")]
+        public async Task<ActionResult<ShopAccount>> GetShopAccountByUserId(int id)
+        {
+            var shopAccount = await _context.ShopAccount.FirstOrDefaultAsync(x=>x.UserId == id);
+
+            if (shopAccount == null)
+            {
+                return NotFound();
+            }
+
+            return shopAccount;
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShopAccount(int id, ShopAccount shopAccount)
         {
@@ -72,36 +86,33 @@ namespace MalikTraders.Controllers
             return NoContent();
         }
 
-        // POST: api/ShopAccounts
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<ShopAccount>> PostShopAccount(ShopAccount shopAccount)
         {
-            _context.ShopAccounts.Add(shopAccount);
+            _context.ShopAccount.Add(shopAccount);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetShopAccount", new { id = shopAccount.Id }, shopAccount);
         }
 
-        // DELETE: api/ShopAccounts/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteShopAccount(int id)
         {
-            var shopAccount = await _context.ShopAccounts.FindAsync(id);
+            var shopAccount = await _context.ShopAccount.FindAsync(id);
             if (shopAccount == null)
             {
                 return NotFound();
             }
 
-            _context.ShopAccounts.Remove(shopAccount);
+            _context.ShopAccount.Remove(shopAccount);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
-
         private bool ShopAccountExists(int id)
         {
-            return _context.ShopAccounts.Any(e => e.Id == id);
+            return _context.ShopAccount.Any(e => e.Id == id);
         }
+        
     }
 }

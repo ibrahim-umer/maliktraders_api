@@ -74,8 +74,7 @@ namespace MalikTraders.Controllers
             try
             {
                 var users = from user in await _context.Users.ToListAsync()
-                            join userD in await _context.userDetails.ToListAsync()
-                            on user.UserDetail.id equals userD.id
+                            join userD in await _context.userDetails.ToListAsync() on user.UserDetail.id equals userD.id
                             select new 
                             { 
                                 user.id, 

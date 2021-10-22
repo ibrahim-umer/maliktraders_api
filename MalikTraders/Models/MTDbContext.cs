@@ -36,7 +36,7 @@ namespace MalikTraders.Models
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<ContactLeads> ContactLeads { get; set; }
         public DbSet<SystemNotification> SystemNotifications { get; set; }
-        public DbSet<ShopAccount> ShopAccounts { get; set; }
-        public DbSet<ShopAccountPaymentHistory> ShopAccountPaymentHistories { get; set; }
+        public DbSet<ShopAccount> ShopAccount { get; set; }
+        public DbSet<ShopAccountPaymentHistory> ShopAccountPaymentHistory { get; set; }
     }
 }

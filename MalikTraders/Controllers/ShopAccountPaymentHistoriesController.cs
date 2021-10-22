@@ -20,18 +20,18 @@ namespace MalikTraders.Controllers
             _context = context;
         }
 
-        // GET: api/ShopAccountPaymentHistories
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ShopAccountPaymentHistory>>> GetShopAccountPaymentHistories()
         {
-            return await _context.ShopAccountPaymentHistories.ToListAsync();
+            return await _context.ShopAccountPaymentHistory.ToListAsync();
         }
 
-        // GET: api/ShopAccountPaymentHistories/5
+
         [HttpGet("{id}")]
         public async Task<ActionResult<ShopAccountPaymentHistory>> GetShopAccountPaymentHistory(int id)
         {
-            var shopAccountPaymentHistory = await _context.ShopAccountPaymentHistories.FindAsync(id);
+            var shopAccountPaymentHistory = await _context.ShopAccountPaymentHistory.FindAsync(id);
 
             if (shopAccountPaymentHistory == null)
             {
@@ -40,9 +40,56 @@ namespace MalikTraders.Controllers
 
             return shopAccountPaymentHistory;
         }
+        [HttpGet("[action]/{id}")]
+        public  ActionResult<ShopAccountPaymentHistory> GetShopAccountPaymentHistorybuUserId(int id)
+        {
+            try
+            {
+                ShopAccount getShopAcc = _context.ShopAccount.FirstOrDefault(x => x.UserId == id)!= null? 
+                    _context.ShopAccount.FirstOrDefault(x => x.UserId == id): new ShopAccount();
+                if (getShopAcc.AccountNo == null)
+                {
+                    return NotFound();
+                }
+                var shopAccountPaymentHistory = _context.ShopAccountPaymentHistory.Where(x => x.ShopAccountId == getShopAcc.Id).ToList();
 
-        // PUT: api/ShopAccountPaymentHistories/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+                if (shopAccountPaymentHistory == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(shopAccountPaymentHistory);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("[action]/{id}")]
+        public ActionResult<ShopAccountPaymentHistory> SearchShopAccountPaymentHistorybuUserId(int id,DateTime StartDate,DateTime EndDate)
+        {
+            try
+            {
+                ShopAccount getShopAcc = _context.ShopAccount.FirstOrDefault(x => x.UserId == id) != null ?
+                    _context.ShopAccount.FirstOrDefault(x => x.UserId == id) : new ShopAccount();
+                if (getShopAcc.AccountNo == null)
+                {
+                    return NotFound();
+                }
+                var shopAccountPaymentHistory = _context.ShopAccountPaymentHistory.Where(x => x.ShopAccountId == getShopAcc.Id && x.TransectionDate >= StartDate && x.TransectionDate <= EndDate).ToList();
+
+                if (shopAccountPaymentHistory == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(shopAccountPaymentHistory);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShopAccountPaymentHistory(int id, ShopAccountPaymentHistory shopAccountPaymentHistory)
         {
@@ -77,7 +124,29 @@ namespace MalikTraders.Controllers
         [HttpPost]
         public async Task<ActionResult<ShopAccountPaymentHistory>> PostShopAccountPaymentHistory(ShopAccountPaymentHistory shopAccountPaymentHistory)
         {
-            _context.ShopAccountPaymentHistories.Add(shopAccountPaymentHistory);
+            if (shopAccountPaymentHistory.AmountPaid == 0)
+            {
+                using(MTDbContext mTDbContext = new MTDbContext())
+                {
+                    ShopAccount shopAccount = mTDbContext.ShopAccount.Find(shopAccountPaymentHistory.ShopAccountId);
+                    mTDbContext.ShopAccount.Attach(shopAccount);
+                    shopAccount.CurrentPayment = shopAccount.CurrentPayment + shopAccountPaymentHistory.AmountRecived;
+                    if (mTDbContext.SaveChanges() < 1)
+                        return BadRequest("Sorry! Data not Saved");
+                }
+            }
+            else if (shopAccountPaymentHistory.AmountRecived == 0)
+            {
+                using (MTDbContext mTDbContext = new MTDbContext())
+                {
+                    ShopAccount shopAccount = mTDbContext.ShopAccount.Find(shopAccountPaymentHistory.ShopAccountId);
+                    mTDbContext.ShopAccount.Attach(shopAccount);
+                    shopAccount.CurrentPayment = shopAccount.CurrentPayment - shopAccountPaymentHistory.AmountPaid;
+                    if (mTDbContext.SaveChanges() < 1)
+                        return BadRequest("Sorry! Data not Saved");
+                }
+            }
+            _context.ShopAccountPaymentHistory.Add(shopAccountPaymentHistory);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetShopAccountPaymentHistory", new { id = shopAccountPaymentHistory.id }, shopAccountPaymentHistory);
@@ -87,13 +156,13 @@ namespace MalikTraders.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteShopAccountPaymentHistory(int id)
         {
-            var shopAccountPaymentHistory = await _context.ShopAccountPaymentHistories.FindAsync(id);
+            var shopAccountPaymentHistory = await _context.ShopAccountPaymentHistory.FindAsync(id);
             if (shopAccountPaymentHistory == null)
             {
                 return NotFound();
             }
 
-            _context.ShopAccountPaymentHistories.Remove(shopAccountPaymentHistory);
+            _context.ShopAccountPaymentHistory.Remove(shopAccountPaymentHistory);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -101,7 +170,7 @@ namespace MalikTraders.Controllers
 
         private bool ShopAccountPaymentHistoryExists(int id)
         {
-            return _context.ShopAccountPaymentHistories.Any(e => e.id == id);
+            return _context.ShopAccountPaymentHistory.Any(e => e.id == id);
         }
     }
 }
