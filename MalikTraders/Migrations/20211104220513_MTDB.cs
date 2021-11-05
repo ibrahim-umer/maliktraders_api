@@ -12,7 +12,7 @@ namespace MalikTraders.Migrations
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("SqlServer:Identity", "1001, 1"),
                     Number = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -27,7 +27,7 @@ namespace MalikTraders.Migrations
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("SqlServer:Identity", "2001, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Amount = table.Column<int>(type: "int", nullable: false),
                     Details = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -42,7 +42,7 @@ namespace MalikTraders.Migrations
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("SqlServer:Identity", "3201, 1"),
                     Header = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Body = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PublishingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -54,47 +54,21 @@ namespace MalikTraders.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "userDetails",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CNIC = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Registration_Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastLogin = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_userDetails", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("SqlServer:Identity", "4100, 1"),
                     GUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     email = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     isUserDisabled = table.Column<bool>(type: "bit", nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserDetailid = table.Column<int>(type: "int", nullable: true)
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_Users_userDetails_UserDetailid",
-                        column: x => x.UserDetailid,
-                        principalTable: "userDetails",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -102,7 +76,7 @@ namespace MalikTraders.Migrations
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("SqlServer:Identity", "5100, 1"),
                     AccNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BankName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AmountPayable = table.Column<int>(type: "int", nullable: false),
@@ -129,7 +103,7 @@ namespace MalikTraders.Migrations
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("SqlServer:Identity", "6001, 1"),
                     Header = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Body = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsRead = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -153,7 +127,7 @@ namespace MalikTraders.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("SqlServer:Identity", "7001, 1"),
                     BankName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AccountNo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDefaulter = table.Column<bool>(type: "bit", nullable: true),
@@ -172,11 +146,37 @@ namespace MalikTraders.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "userDetails",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "8001, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CNIC = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Registration_Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastLogin = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_userDetails", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_userDetails_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AccDetails",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("SqlServer:Identity", "9001, 1"),
                     payedAmount = table.Column<int>(type: "int", nullable: false),
                     PayingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AccId = table.Column<int>(type: "int", nullable: false),
@@ -198,7 +198,7 @@ namespace MalikTraders.Migrations
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("SqlServer:Identity", "1010, 1"),
                     PaymentTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AmountRecived = table.Column<int>(type: "int", nullable: false),
                     AmountPaid = table.Column<int>(type: "int", nullable: false),
@@ -258,15 +258,16 @@ namespace MalikTraders.Migrations
                 filter: "[PhoneNumber] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_userDetails_UserId",
+                table: "userDetails",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_email",
                 table: "Users",
                 column: "email",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_UserDetailid",
-                table: "Users",
-                column: "UserDetailid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_UserName",
@@ -296,6 +297,9 @@ namespace MalikTraders.Migrations
                 name: "SystemNotifications");
 
             migrationBuilder.DropTable(
+                name: "userDetails");
+
+            migrationBuilder.DropTable(
                 name: "Accounts");
 
             migrationBuilder.DropTable(
@@ -303,9 +307,6 @@ namespace MalikTraders.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "userDetails");
         }
     }
 }

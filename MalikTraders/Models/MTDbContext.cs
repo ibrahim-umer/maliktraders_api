@@ -13,8 +13,8 @@ namespace MalikTraders.Models
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //optionsBuilder.UseSqlServer(@"Server=tcp:maliktraders.database.windows.net,1433;Initial Catalog=mt;Persist Security Info=False;User ID=MalikTraders;Password=m.Traders;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
-            optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-FSON37C\SQLEXPRESS;Initial Catalog=MTDB;Integrated Security=True");
+            optionsBuilder.UseSqlServer(@"Server=tcp:maliktraders.database.windows.net,1433;Initial Catalog=mt;Persist Security Info=False;User ID=MalikTraders;Password=m.Traders;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            //optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-FSON37C\SQLEXPRESS;Initial Catalog=MTDB;Integrated Security=True");
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {

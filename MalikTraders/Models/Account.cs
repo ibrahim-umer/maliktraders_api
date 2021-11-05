@@ -24,7 +24,7 @@ namespace MalikTraders.Models
         [Required]
         public int MTServiceId { get; set; }
         [ForeignKey("AccId")]
-        public ICollection<AccDetails> AccPaymentDetails { get; set; }
+        public IList<AccDetails> AccPaymentDetails { get; set; }
         
     }
 }

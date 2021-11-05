@@ -20,9 +20,9 @@ namespace MalikTraders.Models
         public string Role { get; set; }
         public UserDetails UserDetail { get; set; }
         [ForeignKey("Userid")]
-        public ICollection<Account> SchemeAccounts { get; set; }
+        public IList<Account> SchemeAccounts { get; set; }
         [ForeignKey("Userid")]
-        public ICollection<Notification> UserNotification { get; set; }
+        public IList<Notification> UserNotification { get; set; }
         public ShopAccount UserShopAccount { get; set; }
 
     }

@@ -49,7 +49,6 @@ namespace MalikTraders.Controllers
         {
             try
             {
-                
                 var ud = from user in await _context.Users.ToListAsync()
                          join userD in await _context.userDetails.ToListAsync()
                          on user.UserDetail.id equals userD.id
@@ -98,7 +97,39 @@ namespace MalikTraders.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        [HttpGet("[action]/{SchemeId}")]
+        public async Task<ActionResult<IEnumerable<User>>> SearchUserbyUserSchemeID(int SchemeId)
+        {
+            try
+            {
+                Account account = await _context.Accounts.FindAsync(SchemeId);
+                if(account == null) return Ok( );
+                var users = from user in await _context.Users.ToListAsync()
+                            join userD in await _context.userDetails.ToListAsync()
+                            on user.UserDetail.id equals userD.id
+                            where user.id == account.Userid
+                            select new
+                            {
+                                user.id,
+                                userD.Name,
+                                user.UserName,
+                                user.Role,
+                                userD.PhoneNumber,
+                                userD.Registration_Date,
+                                userD.Gender,
+                                userD.LastLogin,
+                                userD.Address,
+                                userD.CNIC,
+                                user.email
+                            };
+                
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpGet("[action]/{CNIC}")]
         public async Task<ActionResult<IEnumerable<User>>> SearchUserbyCNIC(string CNIC)
@@ -211,11 +242,15 @@ namespace MalikTraders.Controllers
         {
             try
             {
+                user.UserName = user.UserName.ToLower().Replace(" ","");
+                user.email = user.email.ToLower().Replace(" ", "");
+                user.UserDetail.CNIC = user.UserDetail.CNIC.ToLower().Replace(" ", "");
+                user.UserDetail.PhoneNumber = user.UserDetail.PhoneNumber.ToLower().Replace(" ", "");
                 user.UserDetail.Registration_Date = DateTime.Now;
                 user.Password = SecurePasswordHasherHelper.Hash(user.Password);
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction("GetUser", new { id = user.id }, user);
+                return Ok(user);
             }
             catch(Exception ex)
             {

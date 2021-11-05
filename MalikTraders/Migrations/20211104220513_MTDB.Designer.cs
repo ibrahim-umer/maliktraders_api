@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MalikTraders.Migrations
 {
     [DbContext(typeof(MTDbContext))]
-    [Migration("20211015001538_MTDB")]
+    [Migration("20211104220513_MTDB")]
     partial class MTDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,7 +18,7 @@ namespace MalikTraders.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.10")
+                .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("MalikTraders.Models.AccDetails", b =>
@@ -266,9 +266,6 @@ namespace MalikTraders.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserDetailid")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -281,8 +278,6 @@ namespace MalikTraders.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("id");
-
-                    b.HasIndex("UserDetailid");
 
                     b.HasIndex("UserName")
                         .IsUnique();
@@ -321,6 +316,9 @@ namespace MalikTraders.Migrations
                     b.Property<DateTime>("Registration_Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("id");
 
                     b.HasIndex("CNIC")
@@ -330,6 +328,9 @@ namespace MalikTraders.Migrations
                     b.HasIndex("PhoneNumber")
                         .IsUnique()
                         .HasFilter("[PhoneNumber] IS NOT NULL");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("userDetails");
                 });
@@ -381,13 +382,15 @@ namespace MalikTraders.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MalikTraders.Models.User", b =>
+            modelBuilder.Entity("MalikTraders.Models.UserDetails", b =>
                 {
-                    b.HasOne("MalikTraders.Models.UserDetails", "UserDetail")
-                        .WithMany()
-                        .HasForeignKey("UserDetailid");
+                    b.HasOne("MalikTraders.Models.User", "GetUser")
+                        .WithOne("UserDetail")
+                        .HasForeignKey("MalikTraders.Models.UserDetails", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("UserDetail");
+                    b.Navigation("GetUser");
                 });
 
             modelBuilder.Entity("MalikTraders.Models.Account", b =>
@@ -403,6 +406,8 @@ namespace MalikTraders.Migrations
             modelBuilder.Entity("MalikTraders.Models.User", b =>
                 {
                     b.Navigation("SchemeAccounts");
+
+                    b.Navigation("UserDetail");
 
                     b.Navigation("UserNotification");
 

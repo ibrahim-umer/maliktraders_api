@@ -18,7 +18,7 @@ namespace MalikTraders.Models
         public User ShopAccUser { get; set; }
 
         [ForeignKey("ShopAccountId")]
-        public ICollection<ShopAccountPaymentHistory> ShopAccountPayments { get; set; }
+        public IList<ShopAccountPaymentHistory> ShopAccountPayments { get; set; }
 
     }
 }

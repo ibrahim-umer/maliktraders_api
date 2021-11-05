@@ -140,5 +140,69 @@ namespace MalikTraders.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet("[action]")]
+        public IActionResult GetPaidAndUnpaidCustomerReportOfScheme(DateTime StartMonth, DateTime EndtartMonth, int SchemeId,bool WithCloseAcc)
+        {
+            try
+            {
+                if (StartMonth > EndtartMonth) BadRequest("Please Check Date we have find you start and end Date conflict thank you");
+                int TotalSchemeCustomers = _context.Accounts.Count(x => x.MTServiceId == SchemeId && x.isAccClosed == WithCloseAcc);
+                
+                List<object> list = new List<object>();
+                while (StartMonth <= EndtartMonth)
+                {
+                    object AnalyticDataPerMonth = new
+                    {
+                        Month = StartMonth,
+                        TotalPaidCustomer = (from Acc in _context.Accounts.Where(x => x.MTServiceId == SchemeId && x.isAccClosed == WithCloseAcc).ToList()
+                                             join AccD in _context.AccDetails.Where(x => x.PayingDate.Month == StartMonth.Month && x.PayingDate.Year == StartMonth.Year).ToList()
+                                             on Acc.id equals AccD.AccId
+                                             select AccD).Count(),
+                        TotalPaidAmount = (from Acc in _context.Accounts.Where(x => x.MTServiceId == SchemeId && x.isAccClosed == WithCloseAcc).ToList()
+                                           join AccD in _context.AccDetails.Where(x => x.PayingDate.Month == StartMonth.Month && x.PayingDate.Year == StartMonth.Year).ToList()
+                                           on Acc.id equals AccD.AccId
+                                           select AccD).Sum(x=>x.payedAmount),
+                    };
+                    list.Add(AnalyticDataPerMonth);
+                    StartMonth = StartMonth.AddMonths(1);
+                }
+                var data = new
+                {
+                    TotalCustomer = TotalSchemeCustomers,
+                    Data = list
+                };
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("[action]/{UserId}")]
+        public IActionResult GetUserAllInfo(int UserId)
+        {
+            try
+            {
+                User user = _context.Users.Find(UserId);
+                user.UserDetail = _context.userDetails.FirstOrDefault(x => x.UserId == UserId);
+                user.SchemeAccounts = _context.Accounts.Where(x => x.Userid == UserId).ToList();
+                user.UserShopAccount = _context.ShopAccount.FirstOrDefault(x => x.UserId == UserId);
+                if(user.UserShopAccount != null) 
+                user.UserShopAccount.ShopAccountPayments = _context.ShopAccountPaymentHistory.Where(x => x.ShopAccountId == user.UserShopAccount.Id).ToList();
+
+                for (int i=0; i < user.SchemeAccounts.Count; i++)
+                {
+                    user.SchemeAccounts[i].AccPaymentDetails = _context.AccDetails.Where(x => x.AccId == user.SchemeAccounts[i].id).ToList();
+                }
+                if (user.UserShopAccount != null)
+                    user.UserShopAccount.ShopAccUser = null;
+                user.Password = null;
+                return Ok(user);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

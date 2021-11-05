@@ -5,7 +5,7 @@ namespace MalikTraders.Models
 {
     public class UserDetails
     {
-        [ForeignKey("User")]
+        
         public int id { get; set; }
         public string Name { get; set; }
         public string CNIC { get; set; }
@@ -14,5 +14,7 @@ namespace MalikTraders.Models
         public string Gender { get; set; }
         public DateTime Registration_Date { get; set; }
         public DateTime LastLogin { get; set; }
+        [ForeignKey("User")]
+        public int UserId { get; set; }
     }
 }

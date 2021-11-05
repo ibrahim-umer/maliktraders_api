@@ -95,7 +95,7 @@ namespace MalikTraders.Controllers
             try
             {
                 var AccD = from AD in await _context.AccDetails.ToListAsync()
-                           where AD.PayingDate >= StartDate && AD.PayingDate <= EndDate
+                           where AD.PayingDate >= StartDate && AD.PayingDate <= EndDate &&  id == AD.AccId
                            select AD;
                 return Ok(AccD);
                            

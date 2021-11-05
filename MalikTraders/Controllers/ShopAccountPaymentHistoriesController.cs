@@ -130,7 +130,7 @@ namespace MalikTraders.Controllers
                 {
                     ShopAccount shopAccount = mTDbContext.ShopAccount.Find(shopAccountPaymentHistory.ShopAccountId);
                     mTDbContext.ShopAccount.Attach(shopAccount);
-                    shopAccount.CurrentPayment = shopAccount.CurrentPayment + shopAccountPaymentHistory.AmountRecived;
+                    shopAccount.CurrentPayment += shopAccountPaymentHistory.AmountRecived;
                     if (mTDbContext.SaveChanges() < 1)
                         return BadRequest("Sorry! Data not Saved");
                 }
@@ -141,7 +141,7 @@ namespace MalikTraders.Controllers
                 {
                     ShopAccount shopAccount = mTDbContext.ShopAccount.Find(shopAccountPaymentHistory.ShopAccountId);
                     mTDbContext.ShopAccount.Attach(shopAccount);
-                    shopAccount.CurrentPayment = shopAccount.CurrentPayment - shopAccountPaymentHistory.AmountPaid;
+                    shopAccount.CurrentPayment -= shopAccountPaymentHistory.AmountPaid;
                     if (mTDbContext.SaveChanges() < 1)
                         return BadRequest("Sorry! Data not Saved");
                 }
